@@ -1,3 +1,4 @@
+ALTER TABLE cars MODIFY COLUMN invoice_Invoice_ID INT DEFAULT 0;
 INSERT INTO cars (ID_cars, VIN, manufacturer, model, year, color)
 VALUES
 (0,'3K096I98581DHSNUP', 'Volkswagen', 'Tiguan', 2019, 'Blue'),
@@ -6,7 +7,7 @@ VALUES
 (3, 'HKNDGS7CU31E9Z7JW', 'Toyota', 'RAV4', 2018, 'Silver'),
 (4, 'DAM41UDN3CHU2WVF6', 'Volvo', 'V60', 2019, 'Gray');
 
-INSERT INTO cutomers (customer_id, customer_number, name, phone_number, email, address, city, state/province, country, zip/postal code)
+INSERT INTO customers (customer_id, customer_number, name, phone_number, email, address, city, state/province, country, zip/postal code)
 VALUES
 (0, '10001', 'Pablo Picasso', '+34 636 17 63 82', '-', 'Paseo de la Chopera, 14', 'Madrid','Madrid', 'Spain', 28045),
 (1, '20001', 'Hedy Lamarr', '+43 1 514442250', '-', 'Weiglgasse 10', 'Viena', 'Viena', 'Austria', '28045')
@@ -28,4 +29,6 @@ VALUES
 (0, '852399038', 22-08-2018, '0','1', '3')
 (1, '731166526', 31-12-2018, '3','0', '5')
 (2, '271135104', 22-01-2019, '2','2', '7');
+
+
 
