@@ -1,11 +1,11 @@
 CREATE DATABASE lab1;
 USE lab1;
 CREATE TABLE Cars (VIN VARCHAR(20), Manufacturer VARCHAR(20),
-Model VARCHAR(20), Color VARCHAR(20), Year DATE);
+Model VARCHAR(20), Color VARCHAR(20), Year Year);
 
 CREATE TABLE Customers (ID	VARCHAR(20), Name VARCHAR(20),
-Phone CHAR(11), Email VARCHAR(20), Address VARCHAR(20), 	
-City VARCHAR(20), State VARCHAR(20), Country VARCHAR(20), Postal VARCHAR(10));
+Phone CHAR(20), Email VARCHAR(100), Address VARCHAR(100), 	
+City VARCHAR(20), State VARCHAR(20), Country VARCHAR(20), Postal VARCHAR(100));
 
 CREATE TABLE Salespersons (ID VARCHAR(20), Name VARCHAR(20), Store VARCHAR(20));
 

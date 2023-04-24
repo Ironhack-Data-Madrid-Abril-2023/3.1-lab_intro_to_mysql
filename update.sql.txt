@@ -1,11 +1,12 @@
 update Customers
 set Email = 'ppicasso@gmail.com'
-where id = 0;
+where Name = "Pablo Picasso";
 
 update Customers
 set Email = 'lamarr_hd@hollywood.com'
-where id = 1;
+where Name = "Hedy Lamarr";
 
 update Customers
 set Email = 'hello@nasa.gov'
-where id = 2;
+where Name = "Katherine Johnson";
+ 

@@ -1,4 +1,3 @@
-USE lab1;
 
 INSERT INTO Customers (ID, Name, Phone, Email, Address, City, State, Country, Postal)
 VALUES ('10001', 'Pablo Picasso', '+34 636 17 63 82', '-', 'Paseo de la Chopera, 14', 'Madrid', 'Madrid', 'Spain', '28045');
