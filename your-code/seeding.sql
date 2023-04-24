@@ -1,4 +1,3 @@
-ALTER TABLE cars MODIFY COLUMN invoice_Invoice_ID INT DEFAULT 0;
 INSERT INTO cars (ID_cars, VIN, manufacturer, model, year, color)
 VALUES
 (0,'3K096I98581DHSNUP', 'Volkswagen', 'Tiguan', 2019, 'Blue'),
@@ -29,6 +28,3 @@ VALUES
 (0, '852399038', 22-08-2018, '0','1', '3')
 (1, '731166526', 31-12-2018, '3','0', '5')
 (2, '271135104', 22-01-2019, '2','2', '7');
-
-
-
