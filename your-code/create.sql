@@ -8,34 +8,47 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 -- Schema mydb
 -- -----------------------------------------------------
 -- -----------------------------------------------------
--- Schema cars
+-- Schema lab_mysql
 -- -----------------------------------------------------
 
 -- -----------------------------------------------------
--- Schema cars
+-- Schema lab_mysql
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `cars` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
-USE `cars` ;
+CREATE SCHEMA IF NOT EXISTS `lab_mysql` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
+USE `lab_mysql` ;
 
 -- -----------------------------------------------------
--- Table `cars`.`Cars`
+-- Table `lab_mysql`.`Cars`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `cars`.`Cars` (
+CREATE TABLE IF NOT EXISTS `lab_mysql`.`Cars` (
+  `idCars` INT NOT NULL AUTO_INCREMENT,
   `VIN` CHAR(17) NULL,
   `Manufacture` VARCHAR(255) NULL,
   `Model` VARCHAR(255) NULL,
-  `Year` YEAR(4) NULL,
+  `Year` INT(4) NULL,
   `Color` VARCHAR(45) NULL,
-  `CarsID` VARCHAR(45) NOT NULL,
-  UNIQUE INDEX `VIN_UNIQUE` (`VIN` ASC) VISIBLE,
-  PRIMARY KEY (`CarsID`))
+  PRIMARY KEY (`idCars`),
+  UNIQUE INDEX `idCars_UNIQUE` (`idCars` ASC) VISIBLE)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `cars`.`Customers`
+-- Table `lab_mysql`.`Salesperson`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `cars`.`Customers` (
+CREATE TABLE IF NOT EXISTS `lab_mysql`.`Salesperson` (
+  `StaffID` INT NOT NULL AUTO_INCREMENT,
+  `Name` VARCHAR(255) NULL,
+  `Store` VARCHAR(255) NULL,
+  PRIMARY KEY (`StaffID`),
+  UNIQUE INDEX `StaffID_UNIQUE` (`StaffID` ASC) VISIBLE)
+ENGINE = InnoDB
+COMMENT = '\n';
+
+
+-- -----------------------------------------------------
+-- Table `lab_mysql`.`Customers`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `lab_mysql`.`Customers` (
   `CustomersID` INT NOT NULL AUTO_INCREMENT,
   `Name` VARCHAR(255) NULL,
   `Phone` VARCHAR(255) NULL,
@@ -44,107 +57,39 @@ CREATE TABLE IF NOT EXISTS `cars`.`Customers` (
   `City` VARCHAR(255) NULL,
   `State` VARCHAR(255) NULL,
   `Country` VARCHAR(255) NULL,
-  `CP` INT(5) NULL,
+  `Postal` INT NULL,
   PRIMARY KEY (`CustomersID`),
   UNIQUE INDEX `CustomersID_UNIQUE` (`CustomersID` ASC) VISIBLE)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `cars`.`Salespersons`
+-- Table `lab_mysql`.`Invoices`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `cars`.`Salespersons` (
-  `StaffID` INT NOT NULL,
-  `Name` VARCHAR(255) NULL,
-  `Store` VARCHAR(255) NULL,
-  `Customers_CustomersID` INT NULL,
-  PRIMARY KEY (`StaffID`, `Customers_CustomersID`),
-  INDEX `fk_Salespersons_Customers1_idx` (`Customers_CustomersID` ASC) VISIBLE,
-  CONSTRAINT `fk_Salespersons_Customers1`
-    FOREIGN KEY (`Customers_CustomersID`)
-    REFERENCES `cars`.`Customers` (`CustomersID`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `cars`.`Invoices`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `cars`.`Invoices` (
+CREATE TABLE IF NOT EXISTS `lab_mysql`.`Invoices` (
   `InvoiceID` INT NOT NULL AUTO_INCREMENT,
-  `Invoice_Number` INT(10) NULL,
   `Date` DATE NULL,
-  `Car` VARCHAR(255) NULL,
-  `Customer` VARCHAR(255) NULL,
-  `Salesperson` VARCHAR(255) NULL,
-  `Cars_VIN` CHAR(17) NOT NULL,
+  `Cars_idCars` INT NOT NULL,
+  `Salesperson_StaffID` INT NOT NULL,
   `Customers_CustomersID` INT NOT NULL,
-  `Salespersons_StaffID` INT NOT NULL,
-  `Salespersons_Customers_CustomersID` INT NOT NULL,
-  PRIMARY KEY (`InvoiceID`, `Cars_VIN`, `Customers_CustomersID`, `Salespersons_StaffID`, `Salespersons_Customers_CustomersID`),
-  UNIQUE INDEX `InvoiceID_UNIQUE` (`InvoiceID` ASC) VISIBLE,
-  UNIQUE INDEX `Invoice_Number_UNIQUE` (`Invoice_Number` ASC) VISIBLE,
-  INDEX `fk_Invoices_Cars1_idx` (`Cars_VIN` ASC) VISIBLE,
+  PRIMARY KEY (`InvoiceID`, `Cars_idCars`, `Salesperson_StaffID`, `Customers_CustomersID`),
+  INDEX `fk_Invoices_Cars_idx` (`Cars_idCars` ASC) VISIBLE,
+  INDEX `fk_Invoices_Salesperson1_idx` (`Salesperson_StaffID` ASC) VISIBLE,
   INDEX `fk_Invoices_Customers1_idx` (`Customers_CustomersID` ASC) VISIBLE,
-  INDEX `fk_Invoices_Salespersons1_idx` (`Salespersons_StaffID` ASC, `Salespersons_Customers_CustomersID` ASC) VISIBLE,
-  CONSTRAINT `fk_Invoices_Cars1`
-    FOREIGN KEY (`Cars_VIN`)
-    REFERENCES `cars`.`Cars` (`VIN`)
+  UNIQUE INDEX `InvoiceID_UNIQUE` (`InvoiceID` ASC) VISIBLE,
+  CONSTRAINT `fk_Invoices_Cars`
+    FOREIGN KEY (`Cars_idCars`)
+    REFERENCES `lab_mysql`.`Cars` (`idCars`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Invoices_Salesperson1`
+    FOREIGN KEY (`Salesperson_StaffID`)
+    REFERENCES `lab_mysql`.`Salesperson` (`StaffID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Invoices_Customers1`
     FOREIGN KEY (`Customers_CustomersID`)
-    REFERENCES `cars`.`Customers` (`CustomersID`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_Invoices_Salespersons1`
-    FOREIGN KEY (`Salespersons_StaffID` , `Salespersons_Customers_CustomersID`)
-    REFERENCES `cars`.`Salespersons` (`StaffID` , `Customers_CustomersID`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `cars`.`Cars_has_Customers`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `cars`.`Cars_has_Customers` (
-  `Cars_VIN` CHAR(17) NOT NULL,
-  `Customers_CustomersID` INT NOT NULL,
-  PRIMARY KEY (`Cars_VIN`, `Customers_CustomersID`),
-  INDEX `fk_Cars_has_Customers_Customers1_idx` (`Customers_CustomersID` ASC) VISIBLE,
-  INDEX `fk_Cars_has_Customers_Cars_idx` (`Cars_VIN` ASC) VISIBLE,
-  CONSTRAINT `fk_Cars_has_Customers_Cars`
-    FOREIGN KEY (`Cars_VIN`)
-    REFERENCES `cars`.`Cars` (`VIN`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_Cars_has_Customers_Customers1`
-    FOREIGN KEY (`Customers_CustomersID`)
-    REFERENCES `cars`.`Customers` (`CustomersID`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `cars`.`Cars_has_Salespersons`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `cars`.`Cars_has_Salespersons` (
-  `Cars_VIN` CHAR(17) NOT NULL,
-  `Salespersons_StaffID` INT NOT NULL,
-  PRIMARY KEY (`Cars_VIN`, `Salespersons_StaffID`),
-  INDEX `fk_Cars_has_Salespersons_Salespersons1_idx` (`Salespersons_StaffID` ASC) VISIBLE,
-  INDEX `fk_Cars_has_Salespersons_Cars1_idx` (`Cars_VIN` ASC) VISIBLE,
-  CONSTRAINT `fk_Cars_has_Salespersons_Cars1`
-    FOREIGN KEY (`Cars_VIN`)
-    REFERENCES `cars`.`Cars` (`VIN`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_Cars_has_Salespersons_Salespersons1`
-    FOREIGN KEY (`Salespersons_StaffID`)
-    REFERENCES `cars`.`Salespersons` (`StaffID`)
+    REFERENCES `lab_mysql`.`Customers` (`CustomersID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
