@@ -1,3 +1,5 @@
+-- MySQL Workbench Forward Engineering
+
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
@@ -9,27 +11,31 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 -- -----------------------------------------------------
 -- Schema mydb
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `mydb` DEFAULT CHARACTER SET utf8 ;
+CREATE SCHEMA IF NOT EXISTS `mydb` DEFAULT CHARACTER SET utf8mb3 ;
 USE `mydb` ;
 
 -- -----------------------------------------------------
 -- Table `mydb`.`cars`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`cars` (
-  `car_vin` INT NULL,
+  `id` VARCHAR(45) NOT NULL,
+  `vin` VARCHAR(17) NOT NULL,
   `manufacturer` VARCHAR(45) NOT NULL,
   `model` VARCHAR(45) NOT NULL,
   `year` INT NOT NULL,
   `color` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`car_vin`))
-ENGINE = InnoDB;
+  UNIQUE INDEX `vin_UNIQUE` (`vin` ASC) VISIBLE,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb3;
 
 
 -- -----------------------------------------------------
 -- Table `mydb`.`customers`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`customers` (
-  `customer_id` INT NULL,
+  `id` INT NOT NULL,
+  `customer_id` INT NOT NULL,
   `name` VARCHAR(100) NOT NULL,
   `phone number` VARCHAR(20) NOT NULL,
   `email` VARCHAR(100) NOT NULL,
@@ -38,54 +44,54 @@ CREATE TABLE IF NOT EXISTS `mydb`.`customers` (
   `state/province` VARCHAR(50) NOT NULL,
   `country` VARCHAR(50) NOT NULL,
   `zip/postal_code` VARCHAR(20) NOT NULL,
-  PRIMARY KEY (`customer_id`))
-ENGINE = InnoDB;
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `customer_id_UNIQUE` (`customer_id` ASC) VISIBLE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb3;
 
 
 -- -----------------------------------------------------
 -- Table `mydb`.`salesname`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`salesname` (
-  `staff_id` INT NULL,
+  `id` INT NOT NULL,
+  `staff_id` INT NOT NULL,
   `name` VARCHAR(100) NOT NULL,
   `store` VARCHAR(100) NOT NULL,
-  PRIMARY KEY (`staff_id`))
-ENGINE = InnoDB;
+  UNIQUE INDEX `staff_id_UNIQUE` (`staff_id` ASC) VISIBLE,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb3;
 
 
 -- -----------------------------------------------------
 -- Table `mydb`.`invoices`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`invoices` (
-  `invoice_id` INT NULL,
+  `invoice_id` INT NOT NULL,
   `invoice_number` VARCHAR(20) NOT NULL,
   `date` DATE NOT NULL,
-  `car` VARCHAR(20) NOT NULL,
+  `sales_person` INT NOT NULL,
+  `car` INT NOT NULL,
   `customer` INT NOT NULL,
-  `salesperson` INT NOT NULL,
-  `salesname_staff_id` INT NOT NULL,
-  `cars_car_vin` INT NOT NULL,
-  `customers_customer_id` INT NOT NULL,
-  PRIMARY KEY (`invoice_id`, `salesname_staff_id`, `cars_car_vin`, `customers_customer_id`),
-  INDEX `fk_invoices_salesname_idx` (`salesname_staff_id` ASC) VISIBLE,
-  INDEX `fk_invoices_cars1_idx` (`cars_car_vin` ASC) VISIBLE,
-  INDEX `fk_invoices_customers1_idx` (`customers_customer_id` ASC) VISIBLE,
-  CONSTRAINT `fk_invoices_salesname`
-    FOREIGN KEY (`salesname_staff_id`)
-    REFERENCES `mydb`.`salesname` (`staff_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+  PRIMARY KEY (`invoice_id`),
+  INDEX `fk_invoices_salesname_idx` (`sales_person` ASC) VISIBLE,
+  INDEX `fk_invoices_cars1_idx` (`car` ASC) VISIBLE,
+  INDEX `fk_invoices_customers1_idx` (`customer` ASC) VISIBLE,
+  UNIQUE INDEX `customers_customer_id_UNIQUE` (`customer` ASC) VISIBLE,
+  UNIQUE INDEX `cars_car_vin_UNIQUE` (`car` ASC) VISIBLE,
+  UNIQUE INDEX `salesname_staff_id_UNIQUE` (`sales_person` ASC) VISIBLE,
   CONSTRAINT `fk_invoices_cars1`
-    FOREIGN KEY (`cars_car_vin`)
-    REFERENCES `mydb`.`cars` (`car_vin`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    FOREIGN KEY (`car`)
+    REFERENCES `mydb`.`cars` (`vin`),
   CONSTRAINT `fk_invoices_customers1`
-    FOREIGN KEY (`customers_customer_id`)
-    REFERENCES `mydb`.`customers` (`customer_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+    FOREIGN KEY (`customer`)
+    REFERENCES `mydb`.`customers` (`customer_id`),
+  CONSTRAINT `fk_invoices_salesname`
+    FOREIGN KEY (`sales_person`)
+    REFERENCES `mydb`.`salesname` (`staff_id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb3;
 
 
 SET SQL_MODE=@OLD_SQL_MODE;
